@@ -20,3 +20,8 @@ Smart orchard project with espressif and esp32 following guidance of the course 
 
 ## Scheme
 ![Design Huertobot](/Course/Design/system-scheme.png)
+
+## Lessons
+
+- [Project setup workflow](Course/03%20-%20Project%20setup/workflow-definition.md)
+- [I2C + BME280](Course/04%20-%20I2C%20+%20BME280/BME280.md)
