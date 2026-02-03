@@ -40,8 +40,8 @@ void scanner_scan(void) {
 
     // Graphical scan implementation
     printf("     0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f\n");
-    printf("00:         ");
-    for (uint8_t address = 0x03; address < 0x78; address++) {
+    printf("00:");
+    for (uint8_t address = 0x00; address <= 0x7F; address++) {
         if (address % 16 == 0) {
             printf("\n%.2x:", address);
         }
@@ -54,6 +54,7 @@ void scanner_scan(void) {
             printf(" --");
         }
     }
+    printf("\n");
     i2c_del_master_bus(bus_handle);
     ESP_LOGI(TAG, "-- I2C scan complete --");
 }
