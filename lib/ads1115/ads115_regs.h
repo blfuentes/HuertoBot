@@ -1,0 +1,38 @@
+#ifndef ADS1115_REGS_H
+#define ADS1115_REGS_H
+
+#include <stdint.h>
+
+/* I2C Device Addresses */
+#define ADS1115_ADDR_GND 0x48
+#define ADS1115_ADDR_VDD 0x49
+#define ADS1115_ADDR_SDA 0x4A
+#define ADS1115_ADDR_SCL 0x4B
+
+/* Pointer Register Addresses */
+#define ADS1115_REG_CONV    0x00
+#define ADS1115_REG_CFG     0x01
+#define ADS1115_REG_LOW_TH  0x02
+#define ADS1115_REG_HIGH_TH 0x03
+
+/* Config Register Bit Masks */
+#define ADS1115_CFG_OS_MASK          0x8000
+#define ADS1115_CFG_OS_OFFSET        15
+#define ADS1115_CFG_MUX_MASK         0x7000
+#define ADS1115_CFG_MUX_OFFSET       12
+#define ADS1115_CFG_PGA_MASK         0x0E00
+#define ADS1115_CFG_PGA_OFFSET       9
+#define ADS1115_CFG_MODE_MASK        0x0100
+#define ADS1115_CFG_MODE_OFFSET      8
+#define ADS1115_CFG_DR_MASK          0x00E0
+#define ADS1115_CFG_DR_OFFSET        5
+#define ADS1115_CFG_COMP_MODE_MASK   0x0010
+#define ADS1115_CFG_COMP_MODE_OFFSET 4
+#define ADS1115_CFG_COMP_POL_MASK    0x0008
+#define ADS1115_CFG_COMP_POL_OFFSET  3
+#define ADS1115_CFG_COMP_LAT_MASK    0x0004
+#define ADS1115_CFG_COMP_LAT_OFFSET  2
+#define ADS1115_CFG_COMP_QUE_MASK    0x0003
+#define ADS1115_CFG_COMP_QUE_OFFSET  0
+
+#endif  // ADS1115_REGS_H

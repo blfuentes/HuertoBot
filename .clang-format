@@ -7,6 +7,7 @@ BasedOnStyle: Google
 AccessModifierOffset: -1
 AlignAfterOpenBracket: Align
 AlignConsecutiveAssignments: None
+AlignConsecutiveMacros: Consecutive
 AlignOperands: Align
 AllowAllArgumentsOnNextLine: true
 AllowAllConstructorInitializersOnNextLine: true
