@@ -16,7 +16,7 @@
 #define ADS1115_REG_HIGH_TH 0x03
 
 /* Config Register Bit Masks */
-#define ADS1115_CFG_OS_MASK          0x8000
+#define ADS1115_CFG_OS_MASK      0x8000
 #define ADS1115_CFG_OS_OFFSET        15
 #define ADS1115_CFG_MUX_MASK         0x7000
 #define ADS1115_CFG_MUX_OFFSET       12
