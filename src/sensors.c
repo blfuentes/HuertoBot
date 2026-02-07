@@ -1,5 +1,7 @@
 #include "sensors.h"
+#include "ads1115.h"
 #include "bme280.h"
+#include "hal/ads1115_hals.h"
 #include "ibme280.h"
 
 #include <esp_log.h>
@@ -10,14 +12,15 @@ static char* TAG = "SENSORS";
 
 struct {
     struct bme280_dev bmedev;
+    Ads1115 ads;
 } sensors;
 
 void sensors_init(SensorConfig* config) {
-    sensors.bmedev.read = bme280_i2c_read;
-    sensors.bmedev.write = bme280_i2c_write;
+    sensors.bmedev.read     = bme280_i2c_read;
+    sensors.bmedev.write    = bme280_i2c_write;
     sensors.bmedev.delay_us = bme280_delay_us;
-    sensors.bmedev.intf_ptr = &config->bme;  // Set this to your I2C device handle
-    sensors.bmedev.intf = BME280_I2C_INTF;
+    sensors.bmedev.intf_ptr = &config->bmeDev;  // Set this to your I2C device handle
+    sensors.bmedev.intf     = BME280_I2C_INTF;
     if (bme280_init(&sensors.bmedev) != BME280_OK) {
         while (1) {
             ESP_LOGE(TAG, "Failed to initialize BME280 sensor");
@@ -34,6 +37,9 @@ void sensors_init(SensorConfig* config) {
     ESP_ERROR_CHECK(
         bme280_set_sensor_settings(BME280_SEL_ALL_SETTINGS, &settings, &sensors.bmedev));
     ESP_ERROR_CHECK(bme280_set_sensor_mode(BME280_POWERMODE_NORMAL, &sensors.bmedev));
+
+    ads1115_esp32Create(&sensors.ads,
+                        &config->adsDev);  // Pass the I2C device handle to the HAL create function
 }
 
 void sensors_update(SensorData* data) {
@@ -41,7 +47,7 @@ void sensors_update(SensorData* data) {
     ESP_ERROR_CHECK(bme280_get_sensor_data(BME280_ALL, &bmedata, &sensors.bmedev));
 
     // Convert to metric units
-    data->temperature = bmedata.temperature;    // Already in °C
-    data->pressure = bmedata.pressure / 100.0;  // Convert Pa to hPa (hectopascals/millibars)
-    data->humidity = bmedata.humidity;          // Already in %RH
+    data->temperature = bmedata.temperature;       // Already in °C
+    data->pressure    = bmedata.pressure / 100.0;  // Convert Pa to hPa (hectopascals/millibars)
+    data->humidity    = bmedata.humidity;          // Already in %RH
 }

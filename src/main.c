@@ -14,20 +14,22 @@ void app_main() {
     //     vTaskDelay(1000 / portTICK_PERIOD_MS);
     // }
 
-    SystemDevs* sysdevs = system_init();
+    SystemDevs* sysdevs    = system_init();
     SensorData sensor_data = {0};
 
-    vTaskDelay(pdMS_TO_TICKS(2000));  // Wait for system to stabilize 
+    vTaskDelay(pdMS_TO_TICKS(2000));  // Wait for system to stabilize
 
+    // This will be set in system_init when the I2C device is created
     SensorConfig sensor_config = {
-        .bme = sysdevs->bme,  // This will be set in system_init when the I2C device is created
+        .bmeDev = sysdevs->bme,
+        .adsDev = sysdevs->ads,
     };
 
     sensors_init(&sensor_config);
 
     for (;;) {
         sensors_update(&sensor_data);
-        printf("Temperature: %.2f °C | Humidity: %.2f %%RH | Pressure: %.2f hPa\n", 
+        printf("Temperature: %.2f °C | Humidity: %.2f %%RH | Pressure: %.2f hPa\n",
                sensor_data.temperature, sensor_data.humidity, sensor_data.pressure);
         // //..
 

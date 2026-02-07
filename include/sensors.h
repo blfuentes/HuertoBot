@@ -4,7 +4,8 @@
 #include <driver/i2c_master.h>
 
 typedef struct {
-    i2c_master_dev_handle_t bme;
+    i2c_master_dev_handle_t bmeDev;
+    i2c_master_dev_handle_t adsDev;
 } SensorConfig;
 
 typedef struct {

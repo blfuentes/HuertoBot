@@ -4,12 +4,11 @@
 #include <freertos/FreeRTOS.h>
 #include <freertos/task.h>
 
-i2c_master_dev_handle_t i2c_dev    = NULL;
-i2c_master_bus_handle_t bus_handle = NULL;
-
-SystemDevs global_devs = {
+static SystemDevs global_devs = {
     .bme = NULL,
+    .ads = NULL,
 };
+i2c_master_bus_handle_t bus_handle = NULL;
 
 SystemDevs* system_init() {
     i2c_master_bus_config_t bus_config = {
@@ -34,6 +33,11 @@ SystemDevs* system_init() {
                                          .flags.disable_ack_check = 0};
 
     ESP_ERROR_CHECK(i2c_master_bus_add_device(bus_handle, &device_config, &global_devs.bme));
+
+    // ADS1115 uses the same I2C bus, so we can add it as well
+    device_config.device_address = ADS1115_I2C_ADDR;  // ADS1115 I2C address
+    ESP_ERROR_CHECK(i2c_master_bus_add_device(bus_handle, &device_config, &global_devs.ads));
+
     return &global_devs;
 }
 

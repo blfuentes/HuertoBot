@@ -3,10 +3,12 @@
 
 #include <driver/i2c_master.h>
 
-#define BME280_I2C_ADDR 0x76
+#define BME280_I2C_ADDR  0x76
+#define ADS1115_I2C_ADDR 0x48
 
 typedef struct {
     i2c_master_dev_handle_t bme;
+    i2c_master_dev_handle_t ads;
 } SystemDevs;
 
 SystemDevs* system_init();
