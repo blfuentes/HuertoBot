@@ -25,3 +25,4 @@ Smart orchard project with espressif and esp32 following guidance of the course 
 
 - [Project setup workflow](Course/03%20-%20Project%20setup/workflow-definition.md)
 - [I2C + BME280](Course/04%20-%20I2C%20+%20BME280/BME280.md)
+- [ADC ADS1115](Course/07%20-%20ADC%20ADS1115/ADS1115.md)

@@ -30,14 +30,14 @@ void app_main() {
     for (;;) {
         sensors_update(&sensor_data);
         printf("Temperature: %.2f °C | Humidity: %.2f %%RH | Pressure: %.2f hPa\n",
-               sensor_data.temperature, sensor_data.humidity, sensor_data.pressure);
+               sensor_data.bme.temperature, sensor_data.bme.humidity, sensor_data.bme.pressure);
         // //..
-
+        printf("ADS1115 Raw Value: %d\n", sensor_data.ads_value);
         // comms_send();
         // pump_actuate();
 
         system_sleep();
 
-        vTaskDelay(pdMS_TO_TICKS(200));  // Update every 5 seconds
+        vTaskDelay(pdMS_TO_TICKS(5000));  // Update every 5 seconds
     }
 }

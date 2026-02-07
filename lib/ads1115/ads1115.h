@@ -63,5 +63,6 @@ typedef struct {
 
 int32_t ads1115_init(Ads1115* ads);
 int32_t ads1115_config(Ads1115* ads, Ads1115Config* config);
+uint16_t ads1115_readRaw(Ads1115* ads);
 
 #endif  //ADS1115_H__

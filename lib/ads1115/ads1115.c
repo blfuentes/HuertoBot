@@ -47,3 +47,11 @@ int32_t ads1115_config(Ads1115* ads, Ads1115Config* config) {
     }
     return ret;
 }
+
+uint16_t ads1115_readRaw(Ads1115* ads) {
+    uint16_t raw_value;
+    if (readReg(ads, ADS1115_REG_CONV, &raw_value) != 0) {
+        return 0;  // Read failed, return 0 or some error code
+    }
+    return (int16_t)raw_value;  // Cast to signed 16-bit integer
+}

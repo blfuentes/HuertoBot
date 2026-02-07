@@ -9,9 +9,12 @@ typedef struct {
 } SensorConfig;
 
 typedef struct {
-    float pressure;
-    float temperature;
-    float humidity;
+    struct {
+        float pressure;
+        float temperature;
+        float humidity;
+    } bme;
+    uint16_t ads_value;
 } SensorData;
 
 void sensors_init(SensorConfig* config);

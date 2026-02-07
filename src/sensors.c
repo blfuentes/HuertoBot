@@ -40,6 +40,14 @@ void sensors_init(SensorConfig* config) {
 
     ads1115_esp32Create(&sensors.ads,
                         &config->adsDev);  // Pass the I2C device handle to the HAL create function
+
+    Ads1115Config ads_config = {
+        .fsr  = ADS1115_FSR_1_024V,
+        .dr   = ADS1115_DR_128SPS,
+        .mux  = ADS1115_MUX_AIN0_GND,
+        .mode = ADS1115_MODE_CONTINUOUS,
+    };
+    ads1115_config(&sensors.ads, &ads_config);
 }
 
 void sensors_update(SensorData* data) {
@@ -47,7 +55,10 @@ void sensors_update(SensorData* data) {
     ESP_ERROR_CHECK(bme280_get_sensor_data(BME280_ALL, &bmedata, &sensors.bmedev));
 
     // Convert to metric units
-    data->temperature = bmedata.temperature;       // Already in °C
-    data->pressure    = bmedata.pressure / 100.0;  // Convert Pa to hPa (hectopascals/millibars)
-    data->humidity    = bmedata.humidity;          // Already in %RH
+    data->bme.temperature = bmedata.temperature;       // Already in °C
+    data->bme.pressure    = bmedata.pressure / 100.0;  // Convert Pa to hPa (hectopascals/millibars)
+    data->bme.humidity    = bmedata.humidity;          // Already in %RH
+
+    // ADS
+    data->ads_value = ads1115_readRaw(&sensors.ads);
 }
