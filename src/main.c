@@ -38,6 +38,6 @@ void app_main() {
 
         system_sleep();
 
-        vTaskDelay(pdMS_TO_TICKS(5000));  // Update every 5 seconds
+        vTaskDelay(pdMS_TO_TICKS(200));  // Update every 5 seconds
     }
 }
