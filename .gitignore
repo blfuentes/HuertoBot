@@ -3,3 +3,12 @@
 .vscode/c_cpp_properties.json
 .vscode/launch.json
 .vscode/ipch
+
+# Ignore for ESP-IDF projects
+build
+sdkconfig
+sdkconfig.old
+sdkconfig.backup
+components
+.vscode
+.devcontainer
