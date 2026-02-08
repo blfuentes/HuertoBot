@@ -10,5 +10,6 @@ sdkconfig
 sdkconfig.old
 sdkconfig.backup
 components
+lib/bme280
 .vscode
 .devcontainer
