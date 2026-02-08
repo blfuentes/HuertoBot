@@ -42,7 +42,7 @@ void sensors_init(SensorConfig* config) {
                         &config->adsDev);  // Pass the I2C device handle to the HAL create function
 
     Ads1115Config ads_config = {
-        .fsr  = ADS1115_FSR_1_024V,
+        .fsr  = ADS1115_FSR_4_096V,
         .dr   = ADS1115_DR_128SPS,
         .mux  = ADS1115_MUX_AIN0_GND,
         .mode = ADS1115_MODE_CONTINUOUS,
