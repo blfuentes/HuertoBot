@@ -32,7 +32,7 @@ void app_main() {
         printf("Temperature: %.2f °C | Humidity: %.2f %%RH | Pressure: %.2f hPa\n",
                sensor_data.bme.temperature, sensor_data.bme.humidity, sensor_data.bme.pressure);
         // //..
-        printf("ADS1115 Raw Value: %d\n", sensor_data.ads_value);
+        printf("ADS1115 Raw Value: %.4f V\n", sensor_data.adc_valueV);
         // comms_send();
         // pump_actuate();
 

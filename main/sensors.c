@@ -60,5 +60,5 @@ void sensors_update(SensorData* data) {
     data->bme.humidity    = bmedata.humidity;          // Already in %RH
 
     // ADS
-    data->ads_value = ads1115_readRaw(&sensors.ads);
+    data->adc_valueV = ads1115_readVoltage(&sensors.ads);  // Convert V to mV
 }
