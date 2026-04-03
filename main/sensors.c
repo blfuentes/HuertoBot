@@ -10,6 +10,9 @@
 
 static char* TAG = "SENSORS";
 
+#define HUMIDITY_GAIN   -48.31
+#define HUMIDITY_OFFSET 149.76
+
 struct {
     struct bme280_dev bmedev;
     Ads1115 ads;
@@ -60,5 +63,11 @@ void sensors_update(SensorData* data) {
     data->bme.humidity    = bmedata.humidity;          // Already in %RH
 
     // ADS
-    data->adc_valueV = ads1115_readVoltage(&sensors.ads);  // Convert V to mV
+    ads1115_setMux(&sensors.ads, ADS1115_MUX_AIN0_GND);  // Set MUX to read from AIN0
+    vTaskDelay(pdMS_TO_TICKS(30));                       // Short delay to ensure stable reading
+    data->adc_Ldr = ads1115_readVoltage(&sensors.ads);   // Read voltage from ADS1115
+    ads1115_setMux(&sensors.ads, ADS1115_MUX_AIN1_GND);  // Set MUX to read from AIN1
+    vTaskDelay(pdMS_TO_TICKS(30));                       // Short delay to ensure stable reading
+    data->adc_Humidity = HUMIDITY_GAIN * ads1115_readVoltage(&sensors.ads) +
+                         HUMIDITY_OFFSET;  // Read voltage from ADS1115 and apply calibration
 }

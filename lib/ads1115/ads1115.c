@@ -5,7 +5,6 @@
 #include <esp_log.h>
 #include <stdio.h>
 
-
 #define ADS_BITS 15
 
 static const float fsrToVScale[] = {
@@ -57,10 +56,29 @@ int32_t ads1115_config(Ads1115* ads, Ads1115Config* config) {
                               ((config->mux) << ADS1115_CFG_MUX_OFFSET & ADS1115_CFG_MUX_MASK) |
                               ((config->fsr) << ADS1115_CFG_PGA_OFFSET & ADS1115_CFG_PGA_MASK) |
                               ((config->dr) << ADS1115_CFG_DR_OFFSET & ADS1115_CFG_DR_MASK);
-        ret = writeReg(ads, ADS1115_REG_CFG, config_reg);
+        ret                 = writeReg(ads, ADS1115_REG_CFG, config_reg);
         if (ret == 0) {
             ads->currentFsr = config->fsr;
         }
+    }
+    return ret;
+}
+
+int32_t ads1115_setMux(Ads1115* ads, Ads1115Mux mux) {
+    int32_t ret = 0;
+    uint8_t config_data[2];
+    if (ads == NULL) {
+        ret = EINVAL;  // Invalid argument
+    } else {
+        // Read current config
+        if (readReg(ads, ADS1115_REG_CFG, config_data) != 0) {
+            return -1;  // Read failed
+        }
+        uint16_t config_reg = (config_data[0] << 8) | config_data[1];
+        // Clear existing MUX bits and set new MUX
+        config_reg &= ~ADS1115_CFG_MUX_MASK;                                   // Clear MUX bits
+        config_reg |= (mux << ADS1115_CFG_MUX_OFFSET) & ADS1115_CFG_MUX_MASK;  // Set new MUX
+        ret = writeReg(ads, ADS1115_REG_CFG, config_reg);
     }
     return ret;
 }

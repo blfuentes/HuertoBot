@@ -32,7 +32,8 @@ void app_main() {
         printf("Temperature: %.2f °C | Humidity: %.2f %%RH | Pressure: %.2f hPa\n",
                sensor_data.bme.temperature, sensor_data.bme.humidity, sensor_data.bme.pressure);
         // //..
-        printf("ADS1115 Raw Value: %.4f V\n", sensor_data.adc_valueV);
+        printf("ADS1115 LDR: %.4f V | Humidity: %.4f %\n", sensor_data.adc_Ldr,
+               sensor_data.adc_Humidity);
         // comms_send();
         // pump_actuate();
 
