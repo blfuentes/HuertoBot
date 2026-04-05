@@ -23,6 +23,6 @@ humidity\% = 149.76 - 48.31 \times V_{measured}
 ```
 
 ## Wiring
-![ads1115 width ldr and humidity wiring](./bme280-ads1115-ldr-humidity-breadboard.png)
+![ads1115 with ldr and humidity wiring](./bme280-ads1115-ldr-humidity-breadboard.png)
 ## Schematic
 ![ads1115 with ldr and humidity schematic](./bme280-ads1115-ldr-humidity-schematic.png)
