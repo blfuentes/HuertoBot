@@ -35,7 +35,14 @@ void app_main() {
         printf("ADS1115 LDR: %.4f V | Humidity: %.4f %%\n", sensor_data.adc_Ldr,
                sensor_data.adc_Humidity);
         // comms_send();
-        // pump_actuate();
+
+        if (sensor_data.adc_Humidity > 1.5) {  // Example threshold for soil moisture
+            printf("Humidity below threshold, actuating pump...\n");
+            pump_actuate();
+            printf("Pump actuation complete.\n");
+        } else {
+            printf("Humidity above threshold, skipping pump actuation.\n");
+        }
 
         system_sleep();
 

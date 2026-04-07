@@ -68,6 +68,8 @@ void sensors_update(SensorData* data) {
     data->adc_Ldr = ads1115_readVoltage(&sensors.ads);   // Read voltage from ADS1115
     ads1115_setMux(&sensors.ads, ADS1115_MUX_AIN1_GND);  // Set MUX to read from AIN1
     vTaskDelay(pdMS_TO_TICKS(30));                       // Short delay to ensure stable reading
-    data->adc_Humidity = HUMIDITY_GAIN * ads1115_readVoltage(&sensors.ads) +
-                         HUMIDITY_OFFSET;  // Read voltage from ADS1115 and apply calibration
+    // data->adc_Humidity = HUMIDITY_GAIN * ads1115_readVoltage(&sensors.ads) +
+    //                      HUMIDITY_OFFSET;  // Read voltage from ADS1115 and apply calibration
+    // recalibrate when the sensor is in the actual environment, this is just a placeholder
+    data->adc_Humidity = ads1115_readVoltage(&sensors.ads);  // Read voltage from ADS1115
 }

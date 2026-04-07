@@ -1,8 +1,11 @@
 #include "system.h"
 
+#include <driver/gpio.h>
 #include <driver/i2c_master.h>
 #include <freertos/FreeRTOS.h>
 #include <freertos/task.h>
+
+#define PUMP_GPIO GPIO_NUM_5
 
 static SystemDevs global_devs = {
     .bme = NULL,
@@ -37,6 +40,17 @@ SystemDevs* system_init() {
     // ADS1115 uses the same I2C bus, so we can add it as well
     device_config.device_address = ADS1115_I2C_ADDR;  // ADS1115 I2C address
     ESP_ERROR_CHECK(i2c_master_bus_add_device(bus_handle, &device_config, &global_devs.ads));
+
+    gpio_config_t pump_conf = {
+        .intr_type    = GPIO_INTR_DISABLE,
+        .mode         = GPIO_MODE_OUTPUT,
+        .pin_bit_mask = (1ULL << PUMP_GPIO),  // Example: GPIO5 for pump control
+        .pull_down_en = GPIO_PULLDOWN_DISABLE,
+        .pull_up_en   = GPIO_PULLUP_DISABLE,
+    };
+    ESP_ERROR_CHECK(gpio_config(&pump_conf));
+
+    global_devs.pump_pin = PUMP_GPIO;
 
     return &global_devs;
 }
