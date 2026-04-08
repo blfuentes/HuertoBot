@@ -26,6 +26,7 @@ void app_main() {
     };
 
     sensors_init(&sensor_config);
+    pump_init(sysdevs->pump_pin);
 
     for (;;) {
         sensors_update(&sensor_data);
@@ -36,7 +37,7 @@ void app_main() {
                sensor_data.adc_Humidity);
         // comms_send();
 
-        if (sensor_data.adc_Humidity > 1.5) {  // Example threshold for soil moisture
+        if (sensor_data.adc_Humidity > 1.5) {  // treshold for pump actuation
             printf("Humidity below threshold, actuating pump...\n");
             pump_actuate();
             printf("Pump actuation complete.\n");
