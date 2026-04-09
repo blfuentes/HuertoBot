@@ -7,6 +7,8 @@
 #include <freertos/FreeRTOS.h>
 #include <freertos/task.h>
 
+#define PUMP_ACTIVATE (false)  // Set to true to enable pump actuation, false to disable
+
 void app_main() {
     // Uncomment this to run the I2C scanner instead of the main application logic
     // while (1) {
@@ -26,7 +28,7 @@ void app_main() {
     };
 
     sensors_init(&sensor_config);
-    pump_init(sysdevs->pump_pin);
+    pump_init(PUMP_ACTIVATE, sysdevs->pump_pin);
 
     for (;;) {
         sensors_update(&sensor_data);
