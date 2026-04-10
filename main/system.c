@@ -5,7 +5,9 @@
 #include <freertos/FreeRTOS.h>
 #include <freertos/task.h>
 
-#define PUMP_GPIO GPIO_NUM_5
+#define PUMP_GPIO       GPIO_NUM_5
+#define HX711_GPIO_SCK  GPIO_NUM_21
+#define HX711_GPIO_DOUT GPIO_NUM_20
 
 static SystemDevs global_devs = {
     .bme = NULL,
@@ -50,7 +52,21 @@ SystemDevs* system_init() {
     };
     ESP_ERROR_CHECK(gpio_config(&pump_conf));
 
-    global_devs.pump_pin = PUMP_GPIO;
+    gpio_config_t hx711 = {
+        .intr_type    = GPIO_INTR_DISABLE,
+        .mode         = GPIO_MODE_OUTPUT,
+        .pin_bit_mask = (1ULL << HX711_GPIO_SCK),
+        .pull_down_en = GPIO_PULLDOWN_DISABLE,
+        .pull_up_en   = GPIO_PULLUP_DISABLE,
+    };
+    ESP_ERROR_CHECK(gpio_config(&hx711));
+    hx711.pin_bit_mask = (1ULL << HX711_GPIO_DOUT);
+    hx711.mode         = GPIO_MODE_INPUT;
+    ESP_ERROR_CHECK(gpio_config(&hx711));
+
+    global_devs.pump_pin       = PUMP_GPIO;
+    global_devs.hx711_sck_pin  = HX711_GPIO_SCK;
+    global_devs.hx711_dout_pin = HX711_GPIO_DOUT;
 
     return &global_devs;
 }

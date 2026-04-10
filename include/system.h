@@ -10,6 +10,8 @@ typedef struct {
     i2c_master_dev_handle_t bme;
     i2c_master_dev_handle_t ads;
     gpio_num_t pump_pin;
+    gpio_num_t hx711_sck_pin;
+    gpio_num_t hx711_dout_pin;
 } SystemDevs;
 
 SystemDevs* system_init();

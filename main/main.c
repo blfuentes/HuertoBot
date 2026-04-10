@@ -23,8 +23,10 @@ void app_main() {
 
     // This will be set in system_init when the I2C device is created
     SensorConfig sensor_config = {
-        .bmeDev = sysdevs->bme,
-        .adsDev = sysdevs->ads,
+        .bmeDev         = sysdevs->bme,
+        .adsDev         = sysdevs->ads,
+        .hx711_sck_pin  = sysdevs->hx711_sck_pin,
+        .hx711_dout_pin = sysdevs->hx711_dout_pin,
     };
 
     sensors_init(&sensor_config);
@@ -34,9 +36,8 @@ void app_main() {
         sensors_update(&sensor_data);
         printf("Temperature: %.2f °C | Humidity: %.2f %%RH | Pressure: %.2f hPa\n",
                sensor_data.bme.temperature, sensor_data.bme.humidity, sensor_data.bme.pressure);
-        // //..
-        printf("ADS1115 LDR: %.4f V | Humidity: %.4f %%\n", sensor_data.adc_Ldr,
-               sensor_data.adc_Humidity);
+        printf("ADS1115 LDR: %.4f V | Humidity: %.4f %% | Weight: %lu\n", sensor_data.adc_Ldr,
+               sensor_data.adc_Humidity, sensor_data.raw_weight);
         // comms_send();
 
         if (sensor_data.adc_Humidity > 1.5) {  // treshold for pump actuation

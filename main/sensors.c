@@ -2,6 +2,7 @@
 #include "ads1115.h"
 #include "bme280.h"
 #include "hal/ads1115_hals.h"
+#include "hx711.h"
 #include "ibme280.h"
 
 #include <esp_log.h>
@@ -16,6 +17,7 @@ static char* TAG = "SENSORS";
 struct {
     struct bme280_dev bmedev;
     Ads1115 ads;
+    Hx711 hx711;
 } sensors;
 
 void sensors_init(SensorConfig* config) {
@@ -51,6 +53,12 @@ void sensors_init(SensorConfig* config) {
         .mode = ADS1115_MODE_CONTINUOUS,
     };
     ads1115_config(&sensors.ads, &ads_config);
+
+    sensors.hx711.channel  = HX711_CH_A_GAIN_128;  // Example: Channel A with gain 128
+    sensors.hx711.sck_pin  = config->hx711_sck_pin;
+    sensors.hx711.dout_pin = config->hx711_dout_pin;
+
+    hx711_init(&sensors.hx711);
 }
 
 void sensors_update(SensorData* data) {
@@ -72,4 +80,7 @@ void sensors_update(SensorData* data) {
     //                      HUMIDITY_OFFSET;  // Read voltage from ADS1115 and apply calibration
     // recalibrate when the sensor is in the actual environment, this is just a placeholder
     data->adc_Humidity = ads1115_readVoltage(&sensors.ads);  // Read voltage from ADS1115
+
+    // HX711
+    hx711_read_values(&sensors.hx711, &data->raw_weight);
 }
