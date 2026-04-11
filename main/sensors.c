@@ -9,10 +9,18 @@
 #include <freertos/FreeRTOS.h>
 #include <freertos/task.h>
 
-static char* TAG = "SENSORS";
+static char* TAG       = "SENSORS";
+static char* TAG_HX711 = "HX711";
 
 #define HUMIDITY_GAIN   -48.31
 #define HUMIDITY_OFFSET 149.76
+
+#define CALIBRATION_HX711_SAMPLES (100U)
+#define CALIBRATION_HX711_WARMUP  (1500U)  // HX711 warm-up time for thermal settling
+#define CALIBRATION_HX711_DISCARD (10U)    // Readings to discard after warm-up
+#define NUM_SAMPLES_TO_AVERAGE    (10U)
+#define HX711_GAIN                (2.34568e-3f)  // grams per count
+#define HX711_OFFSET              (0.432f)       // y-intercept from two-point calibration
 
 struct {
     struct bme280_dev bmedev;
@@ -54,11 +62,12 @@ void sensors_init(SensorConfig* config) {
     };
     ads1115_config(&sensors.ads, &ads_config);
 
-    sensors.hx711.channel  = HX711_CH_A_GAIN_128;  // Example: Channel A with gain 128
-    sensors.hx711.sck_pin  = config->hx711_sck_pin;
-    sensors.hx711.dout_pin = config->hx711_dout_pin;
+    sensors.hx711.channel   = HX711_CHA_128;
+    sensors.hx711.gpio_sck  = config->hx711_sck_pin;
+    sensors.hx711.gpio_data = config->hx711_dout_pin;
 
     hx711_init(&sensors.hx711);
+    hx711_set_scale_offset(&sensors.hx711, HX711_GAIN, HX711_OFFSET);
 }
 
 void sensors_update(SensorData* data) {
@@ -82,5 +91,37 @@ void sensors_update(SensorData* data) {
     data->adc_Humidity = ads1115_readVoltage(&sensors.ads);  // Read voltage from ADS1115
 
     // HX711
-    hx711_read_values(&sensors.hx711, &data->raw_weight);
+    float grams    = 0.0f;
+    float sumGrams = 0.0f;
+    for (size_t i = 0; i < NUM_SAMPLES_TO_AVERAGE; i++) {
+        hx711_read_value_scaled(&sensors.hx711, &grams);
+        sumGrams += grams;
+    }
+    data->grams = sumGrams / NUM_SAMPLES_TO_AVERAGE;
+    hx711_read_value_raw(&sensors.hx711, &data->raw_weight);
+}
+
+void sensors_calibrate() {
+    // Wait for HX711 thermal settling
+    ESP_LOGI(TAG_HX711, "Warming up HX711 (%lu ms)...", (unsigned long)CALIBRATION_HX711_WARMUP);
+    vTaskDelay(pdMS_TO_TICKS(CALIBRATION_HX711_WARMUP));
+
+    // Discard initial unstable readings
+    int32_t discard;
+    for (size_t i = 0; i < CALIBRATION_HX711_DISCARD; i++) {
+        hx711_read_value_raw(&sensors.hx711, &discard);
+    }
+
+    int32_t value     = 0;
+    int64_t sumValues = 0;
+    for (size_t i = 0; i < CALIBRATION_HX711_SAMPLES; i++) {
+        hx711_read_value_raw(&sensors.hx711, &value);
+        sumValues += value;
+    }
+    int32_t average = (int32_t)(sumValues / CALIBRATION_HX711_SAMPLES);
+    // Adjust tare to compensate for offset: at 0g, (raw - tare) * gain + offset = 0
+    int32_t adjusted_tare = average + (int32_t)(HX711_OFFSET / HX711_GAIN);
+    ESP_LOGI(TAG_HX711, "Calibration complete. Average tare value: %d (adjusted: %d)", (int)average,
+             (int)adjusted_tare);
+    hx711_set_tare(&sensors.hx711, adjusted_tare);
 }

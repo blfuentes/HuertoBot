@@ -8,6 +8,7 @@
 #include <freertos/task.h>
 
 #define PUMP_ACTIVATE (false)  // Set to true to enable pump actuation, false to disable
+#define CALIBRATION   (0U)
 
 void app_main() {
     // Uncomment this to run the I2C scanner instead of the main application logic
@@ -19,7 +20,7 @@ void app_main() {
     SystemDevs* sysdevs    = system_init();
     SensorData sensor_data = {0};
 
-    vTaskDelay(pdMS_TO_TICKS(2000));  // Wait for system to stabilize
+    vTaskDelay(pdMS_TO_TICKS(500));  // Wait for system to stabilize
 
     // This will be set in system_init when the I2C device is created
     SensorConfig sensor_config = {
@@ -32,12 +33,16 @@ void app_main() {
     sensors_init(&sensor_config);
     pump_init(PUMP_ACTIVATE, sysdevs->pump_pin);
 
+    // Always auto-tare at boot (scale must be empty)
+    sensors_calibrate();
+
     for (;;) {
         sensors_update(&sensor_data);
         printf("Temperature: %.2f °C | Humidity: %.2f %%RH | Pressure: %.2f hPa\n",
                sensor_data.bme.temperature, sensor_data.bme.humidity, sensor_data.bme.pressure);
-        printf("ADS1115 LDR: %.4f V | Humidity: %.4f %% | Weight: %lu\n", sensor_data.adc_Ldr,
-               sensor_data.adc_Humidity, sensor_data.raw_weight);
+        printf("ADS1115 LDR: %.4f V | Humidity: %.4f %% | Weight: %ld | Calibrated Weight: %.2f\n",
+               sensor_data.adc_Ldr, sensor_data.adc_Humidity, (long)sensor_data.raw_weight,
+               sensor_data.grams);
         // comms_send();
 
         if (sensor_data.adc_Humidity > 1.5) {  // treshold for pump actuation
@@ -50,6 +55,6 @@ void app_main() {
 
         system_sleep();
 
-        vTaskDelay(pdMS_TO_TICKS(200));  // Update every 5 seconds
+        vTaskDelay(pdMS_TO_TICKS(10));  // Update every 200 milliseconds
     }
 }

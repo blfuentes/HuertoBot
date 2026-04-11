@@ -18,11 +18,13 @@ typedef struct {
     } bme;
     float adc_Ldr;
     float adc_Humidity;
-    uint32_t raw_weight;
+    int32_t raw_weight;
+    float grams;
 } SensorData;
 
 void sensors_init(SensorConfig* config);
 
 void sensors_update(SensorData* data);
 
+void sensors_calibrate();
 #endif  // SENSORS_C__
