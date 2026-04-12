@@ -19,8 +19,10 @@ static char* TAG_HX711 = "HX711";
 #define CALIBRATION_HX711_WARMUP  (1500U)  // HX711 warm-up time for thermal settling
 #define CALIBRATION_HX711_DISCARD (10U)    // Readings to discard after warm-up
 #define NUM_SAMPLES_TO_AVERAGE    (10U)
-#define HX711_GAIN                (1.75926e-3f)  // grams per count
-#define HX711_OFFSET              (-0.213f)      // y-intercept from two-point calibration
+// #define HX711_GAIN                (2.43278e-4f)  // grams per count
+// #define HX711_OFFSET              (31.571f)      // y-intercept from two-point calibration
+#define HX711_GAIN   (-9.38272e-4f)  // grams per count (negative: output decreases with weight)
+#define HX711_OFFSET (4.279f)       // y-intercept from two-point calibration
 
 struct {
     struct bme280_dev bmedev;
