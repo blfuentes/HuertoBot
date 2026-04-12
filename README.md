@@ -27,3 +27,6 @@ Smart orchard project with espressif and esp32 following guidance of the course 
 - [I2C + BME280](Course/04%20-%20I2C%20+%20BME280/BME280.md)
 - [ADC ADS1115](Course/07%20-%20ADC%20ADS1115/ADS1115.md)
 - [LDR + FC 28 Humidity](Course/09%20-%20LDR%20and%20Humidity/ldr-humidity.md)
+- [MOSFET IRLZ44N](Course/11%20-%20MOSFET%20Control/IRLZ44N.md)
+- [HX711](Course/12%20-%20HX711/hx711.md)
+- [Solar panel](Course/13%20-%20Solar%20panel/solar%20panel.md)
