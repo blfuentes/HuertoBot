@@ -30,3 +30,4 @@ Smart orchard project with espressif and esp32 following guidance of the course 
 - [MOSFET IRLZ44N](Course/11%20-%20MOSFET%20Control/IRLZ44N.md)
 - [HX711](Course/12%20-%20HX711/hx711.md)
 - [Solar panel](Course/13%20-%20Solar%20panel/solar%20panel.md)
+- [Power Supply](Course/14%20-%20Power%20supply/power%20supply.md)
