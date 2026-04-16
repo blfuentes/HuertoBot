@@ -13,3 +13,9 @@ components
 lib/bme280
 .vscode
 .devcontainer
+
+# Managed components
+managed_components
+
+# ignore wifi secrets
+include/secrets.h

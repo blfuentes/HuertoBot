@@ -31,3 +31,4 @@ Smart orchard project with espressif and esp32 following guidance of the course 
 - [HX711](Course/12%20-%20HX711/hx711.md)
 - [Solar panel](Course/13%20-%20Solar%20panel/solar%20panel.md)
 - [Power Supply](Course/14%20-%20Power%20supply/power%20supply.md)
+- [Wifi MQTT](/Course/15%20-%20Wifi-MQTT/wifi-mqtt.md)
