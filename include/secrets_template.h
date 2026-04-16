@@ -1,8 +1,8 @@
 // Rename to secrets.h and fill with proper credentials
-#ifndef SECRET_H__
-#define SECRET_H__
+#ifndef SECRETS_H__
+#define SECRETS_H__
 
 #define ESP_SSID "YOUR SSID"
 #define ESP_PWD "TU PASSWORD"
 
-#endif SECRET_H__
+#endif // SECRETS_H__
