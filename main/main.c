@@ -4,6 +4,7 @@
 #include "sensors.h"
 #include "system.h"
 
+#include <esp_timer.h>
 #include <freertos/FreeRTOS.h>
 #include <freertos/task.h>
 
@@ -32,10 +33,12 @@ void app_main() {
 
     sensors_init(&sensor_config);
     pump_init(PUMP_ACTIVATE, sysdevs->pump_pin);
+    comms_init();
 
     // Always auto-tare at boot (scale must be empty)
     sensors_calibrate();
 
+    int64_t calibration_time = 0;
     for (;;) {
         sensors_update(&sensor_data);
         printf("Temperature: %.2f °C | Humidity: %.2f %%RH | Pressure: %.2f hPa\n",
@@ -43,7 +46,13 @@ void app_main() {
         printf("ADS1115 LDR: %.4f V | Humidity: %.4f %% | Weight: %ld | Calibrated Weight: %.2f\n",
                sensor_data.adc_Ldr, sensor_data.adc_Humidity, (long)sensor_data.raw_weight,
                sensor_data.grams);
-        // comms_send();
+        
+        if (esp_timer_get_time()  - calibration_time > 10000000) {
+            printf("Calibration time reached, calibrating sensors...\n");
+            comms_send(&sensor_data);
+            printf("Calibration complete.\n");
+            calibration_time = esp_timer_get_time();
+        }
 
         if (sensor_data.adc_Humidity > 1.5) {  // treshold for pump actuation
             printf("Humidity below threshold, actuating pump...\n");
