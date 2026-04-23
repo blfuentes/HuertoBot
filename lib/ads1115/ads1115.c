@@ -56,7 +56,7 @@ int32_t ads1115_config(Ads1115* ads, Ads1115Config* config) {
                               ((config->mux) << ADS1115_CFG_MUX_OFFSET & ADS1115_CFG_MUX_MASK) |
                               ((config->fsr) << ADS1115_CFG_PGA_OFFSET & ADS1115_CFG_PGA_MASK) |
                               ((config->dr) << ADS1115_CFG_DR_OFFSET & ADS1115_CFG_DR_MASK);
-        ret                 = writeReg(ads, ADS1115_REG_CFG, config_reg);
+        ret = writeReg(ads, ADS1115_REG_CFG, config_reg);
         if (ret == 0) {
             ads->currentFsr = config->fsr;
         }
@@ -86,7 +86,7 @@ int32_t ads1115_setMux(Ads1115* ads, Ads1115Mux mux) {
 int16_t ads1115_readRaw(Ads1115* ads) {
     int16_t ret;
     readReg(ads, ADS1115_REG_CONV, (uint8_t*)&ret);
-    ESP_LOGI("ADS", "ADC Hex: %08x", ret);
+    // ESP_LOGI("ADS", "ADC Hex: %08x", ret);
     return ((ret & 0xFF) << 8) | ((ret >> 8) & 0xFF);
 }
 

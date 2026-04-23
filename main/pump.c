@@ -1,17 +1,21 @@
 #include "pump.h"
+#include <esp_log.h>
 #include <freertos/FreeRTOS.h>
+#include <freertos/task.h>
+
+static const char* TAG = "Pump";
 
 static bool activated = false;
 static gpio_num_t pump_pin;
 
 void pump_init(bool activate, gpio_num_t pin) {
     activated = activate;
-    pump_pin = pin;    
+    pump_pin  = pin;
 }
 
 void pump_actuate(void) {
     if (!activated) {
-        printf("Pump actuation skipped: Pump is not activated.\n");
+        ESP_LOGW("Pump", "Pump actuation skipped: Pump is not activated.");
         return;
     }
     gpio_set_level(pump_pin, 1);      // Turn pump on
